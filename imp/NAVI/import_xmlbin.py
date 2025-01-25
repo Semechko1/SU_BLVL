@@ -203,7 +203,7 @@ def read_file(file):
     vd_og = array_read(vd_adr, Offset, file, 88)
     #print(vd_og)
     test_vd_sep_og = array_sep(vd_og[0:1])
-    print(test_vd_sep_og)
+    print(test_vd_sep_og) #huh
 
 
 # checkpoints (end of ... )

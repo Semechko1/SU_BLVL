@@ -23,6 +23,20 @@ def Index_to_int(num):
     # print(out_value)
     return out_value
 
+def array_sep(array):
+    a=0
+    temp_arr=[]
+    i=0
+    while(len(array)>i):
+        temp_arr.append([])
+        while(int(len(array[i])))>a:
+            temp_arr[i].append(array[i][a:a+8])
+            a+=8
+        a=0
+        i+=1
+
+    return temp_arr
+
 
 def array_creation(array):
     marray = []
@@ -40,11 +54,11 @@ def array_conv(array):
     return temp_arr
 
 
-def array_read(array, Offset, file):
+def array_read(array, Offset, file, lengh):
     temp_arr = []
     i = 0
     while (len(array)) > i:
-        temp_arr.append(file[(array[i] + Offset) * 2:(array[i] + 16 + Offset) * 2])
+        temp_arr.append(file[(array[i] + Offset) * 2:(array[i] + lengh + Offset) * 2])
         i += 1
     return temp_arr
 
@@ -110,7 +124,7 @@ def read_file(file):
         # print(a)
         splitted_intro.append(a)
         i += 8
-    # print(splitted_intro)
+    #print(splitted_intro)
     file_size = int(splitted_intro[0], 16)
     DataEndAddress = int(splitted_intro[2], 16)
     Offset = int(splitted_intro[3], 16)
@@ -143,17 +157,53 @@ def read_file(file):
     SomethingFromDataSize2 = int(splitted_intro[37], 16)
     Unknown7 = int(splitted_intro[38], 16)
 
+
+    # AdjFaceIndex
     AdjFaceIndex_IDs = new_array_cr(file,
                                     int(file[(EndAddressOf2N + Offset + 8) * 2:(EndAddressOf2N + Offset + 8 + 4) * 2],
                                         16),
                                     (EndAddressOf2N + Offset + 16) * 2)
     AdjFaceIndex_adr = array_conv(AdjFaceIndex_IDs)
     #    print(AdjFaceIndex_adr)
-
-    AdjFaceIndex_og = array_read(AdjFaceIndex_adr, Offset, file)
+    AdjFaceIndex_og = array_read(AdjFaceIndex_adr, Offset, file, 16)
     #print(AdjFaceIndex_og)
     AdjFaceIndex = array_creation(AdjFaceIndex_og)
-    print(AdjFaceIndex)
+    #print(AdjFaceIndex)
+
+
+    #color
+    color_IDs = new_array_cr(file, int(file[(EndAddressOf3N + Offset + 8)*2:(EndAddressOf3N+Offset+8+4)*2],16),
+                             (EndAddressOf3N+Offset+16)*2)
+    #print(color_IDs)
+    color_adr = array_conv(color_IDs)
+    color_og = array_read(color_adr, Offset, file, 16)
+    #print(color_og)
+    color = array_creation(color_og)
+    #print(color)
+    #print(f'{len(color)} and {len(color_IDs)}')
+
+    # Illum
+    Illum_IDs = new_array_cr(file,
+                             int(file[(EndAddressOf4N + Offset + 8) * 2:(EndAddressOf4N + Offset + 8 + 4) * 2], 16),
+                             (EndAddressOf4N + Offset + 16) * 2)
+    # print(Illum_IDs)
+    Illum_adr = array_conv(Illum_IDs)
+    Illum_og = array_read(Illum_adr, Offset, file, 16)
+    # print(Illum_og)
+    Illum = array_creation(Illum_og)
+    #print(Illum)
+    #print(f'{len(Illum)} and {len(Illum_IDs)}')
+
+    # Vertex Data
+    vd_IDs = new_array_cr(file,
+                             int(file[(EndAddressOf5N + Offset + 8) * 2:(EndAddressOf5N + Offset + 8 + 4) * 2], 16),
+                             (EndAddressOf5N + Offset + 16) * 2)
+    # print(cd_IDs)
+    vd_adr = array_conv(vd_IDs)
+    vd_og = array_read(vd_adr, Offset, file, 88)
+    #print(vd_og)
+    test_vd_sep_og = array_sep(vd_og[0:1])
+    print(test_vd_sep_og)
 
 
 # checkpoints (end of ... )

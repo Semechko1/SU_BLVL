@@ -1,4 +1,5 @@
-from imp.set_xml import box_create, open_xml
+from .imp.set_xml import box_create, open_xml
+from .imp.NAVI import import_xmlbin
 
 bl_info = {
     'name': 'Blender Unleashed Lvl',
@@ -7,14 +8,15 @@ bl_info = {
     'blender': (2, 83, 20),
     'location': 'File > Import ',
     'description': 'Import-Create-Export Sonic Unleashed stages!',
-    #"wiki_url": "https://github.com/matyalatte/Blender-DDS-Addon",
+    "wiki_url": "https://github.com/Semechko1/SU_BLVL",
     'support': 'COMMUNITY',
     'category': 'Import-Export',
 }
 
 modules = [
     open_xml,
-    box_create
+    box_create,
+    import_xmlbin
 ]
 
 

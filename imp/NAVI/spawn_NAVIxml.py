@@ -1,7 +1,8 @@
 import bpy
 import bmesh
 import ntpath
-from .read_xmlbin import read_xmlbin
+
+from .read_NAVIxml import read_NAVIxml
 from bpy_extras.object_utils import AddObjectHelper
 
 from bpy.props import (
@@ -23,9 +24,9 @@ def add_box(self, width, height, depth, path):
     no actual mesh data creation is done here.
     """
 
-    verts = read_xmlbin.read_file(self, path)[3]
+    verts = read_NAVIxml.read_file(self, path)[3]
 
-    faces = calc_faces(read_xmlbin.read_file(self, path)[4])
+    faces = calc_faces(read_NAVIxml.read_file(self, path)[4])
     print(faces)
 
     # apply size
@@ -36,9 +37,9 @@ def add_box(self, width, height, depth, path):
 
 
 class AddBox(bpy.types.Operator, AddObjectHelper):
-    """Add the xmlbin navmesh"""
-    bl_idname = "mesh.xmlbin"
-    bl_label = "Add xmlblin"
+    """Add the .NAVI.XML navmesh"""
+    bl_idname = "mesh.NAVI.XML"
+    bl_label = "Add .NAVI.XML"
     bl_options = {'REGISTER', 'UNDO'}
 
     width: FloatProperty(

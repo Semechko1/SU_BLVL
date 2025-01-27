@@ -1,5 +1,7 @@
+import bpy
 from .imp.set_xml import box_create, open_xml
-from .imp.NAVI import import_xmlbin
+from .imp.NAVI.import_xmlbin import ImportXMLBIN
+from .imp.NAVI.import_NAVIxml import ImportNAVI_XML
 
 bl_info = {
     'name': 'Blender Unleashed Lvl',
@@ -13,20 +15,42 @@ bl_info = {
     'category': 'Import-Export',
 }
 
-modules = [
-    open_xml,
-    box_create,
-    import_xmlbin
+
+class TOPBAR_MT_SU_BLVL_import(bpy.types.Menu):
+    '''The export submenu in the export menu'''
+
+    bl_label = "SU Formats"
+
+    def draw(self, context):
+        layout = self.layout
+        layout.label(text="NAVI imports...")
+        layout.operator("import_scene.navixml")
+        layout.operator("import_scene.navixmlbin")
+        layout.separator()
+
+
+def menu_func_exportsu(self, context):
+    self.layout.menu("TOPBAR_MT_SU_BLVL_import")
+
+
+classes = [
+    TOPBAR_MT_SU_BLVL_import,
+    ImportXMLBIN,
+    ImportNAVI_XML
 ]
 
 
 def register():
     """Add addon."""
-    for module in modules:
-        module.register()
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_exportsu)
 
 
 def unregister():
     """Remove addon."""
-    for module in modules:
-        module.unregister()
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_exportsu)

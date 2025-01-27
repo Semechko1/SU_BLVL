@@ -1,5 +1,5 @@
 import bpy
-from .spawn_xmlbin import AddBox
+from .spawn_NAVIxml import AddBox
 
 
 # ImportHelper is a helper class, defines filename and
@@ -9,16 +9,16 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
 
-class ImportXMLBIN(Operator, ImportHelper):
+class ImportNAVI_XML(Operator, ImportHelper):
     """This appears in the tooltip of the operator and in the generated docs"""
-    bl_idname = "import_scene.navixmlbin"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import xmlbin"
+    bl_idname = "import_scene.navixml"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import NAVI.XML"
 
     # ImportHelper mix-in class uses this.
-    filename_ext = ".xmlbin"
+    filename_ext = ".NAVI.XML"
 
     filter_glob: StringProperty(
-        default="*.xmlbin",
+        default="*.NAVI.XML",
         options={'HIDDEN'},
         maxlen=255,  # Max internal buffer length, longer would be clamped.
     )
@@ -47,18 +47,18 @@ class ImportXMLBIN(Operator, ImportHelper):
 
 # Only needed if you want to add into a dynamic menu.
 def menu_func_import(self, context):
-    self.layout.operator(ImportXMLBIN.bl_idname, text="Import .NAVI.xmlbin")
+    self.layout.operator(ImportNAVI_XML.bl_idname, text="Import .NAVI.xml")
 
 
 # Register and add to the "file selector" menu (required to use F3 search "Text Import Operator" for quick access).
 def register():
-    bpy.utils.register_class(ImportXMLBIN)
+    bpy.utils.register_class(ImportNAVI_XML)
     bpy.types.TOPBAR_MT_file_import.append(menu_func_import)
 
 
 def unregister():
     bpy.types.TOPBAR_MT_file_import.remove(menu_func_import)
-    bpy.utils.unregister_class(ImportXMLBIN)
+    bpy.utils.unregister_class(ImportNAVI_XML)
 
 
 if __name__ == "__main__":

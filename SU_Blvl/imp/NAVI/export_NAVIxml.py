@@ -20,8 +20,10 @@ def write_some_data(context, filepath, use_some_setting):
 
     # DataSize
     data_size = ET.SubElement(root, "DataSize")
-    ET.SubElement(data_size, "VertsNum").text = str(len(bm.verts))
-    ET.SubElement(data_size, "FacesNum").text = str(len(bm.faces))
+    VertsNum = ET.SubElement(data_size, "VertsNum")
+    VertsNum.text = str(len(bm.verts))
+    FacesNum = ET.SubElement(data_size, "FacesNum")
+    FacesNum.text = str(len(bm.faces))
 
     # TagVertex
     tag_vertex = ET.SubElement(root, "TagVertex")
@@ -65,7 +67,10 @@ def write_some_data(context, filepath, use_some_setting):
             face = ET.SubElement(tag_adjacent_face_index, "AdjFaceIndex")
             temp_lis = [f.index for f in j.link_faces]
             if len(temp_lis) == 1:
-                face.text = "-1"
+                if use_some_setting == True:
+                    face.text = "0"
+                if use_some_setting == False:
+                    face.text = "-1"
             elif len(temp_lis) > 1:
                 face.text = str(find_correct_index(i.index, temp_lis))
 
@@ -82,11 +87,15 @@ def write_some_data(context, filepath, use_some_setting):
         ilu.text = str(0)
 
     # Writing to the .xml
-    xmlstr = tostring(root).decode()
+    tree = ET.ElementTree(root)
+    ET.indent(tree)
+    tree.write(filename, encoding='utf-8',xml_declaration=True)
+    #xmlstr = tostring(root).decode()
 
-    outp = open(filename, "w", encoding="utf-8")
-    outp.write(header + xmlstr)
-    outp.close()
+
+    #outp = open(filename, "w", encoding="utf-8")
+    #outp.write(header + xmlstr)
+    #outp.close()
     return {'FINISHED'}
 
 
@@ -114,9 +123,9 @@ class ExportNAVI_XML(Operator, ExportHelper):
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
     use_setting: BoolProperty(
-        name="Example Boolean",
-        description="Example Tooltip",
-        default=True,
+        name="Use 0 instead of -1",
+        description="Currently AdjFaceIndex -1 values don't work, so this check switches all of -1 to 0",
+        default=False,
     )
 
     type: EnumProperty(

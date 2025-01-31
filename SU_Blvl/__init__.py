@@ -21,6 +21,7 @@ class TOPBAR_MT_SU_BLVL_import(bpy.types.Menu):
     '''The import submenu in the import menu'''
 
     bl_label = "SU Formats"
+    bl_idname = "import_menu"
 
     def draw(self, context):
         layout = self.layout
@@ -28,17 +29,19 @@ class TOPBAR_MT_SU_BLVL_import(bpy.types.Menu):
         layout.separator()
         layout.operator("import_scene.navixml")
         layout.operator("import_scene.navixmlbin")
-        layout.separator()
+        #layout.separator()
+    
 
 
 def menu_func_importsu(self, context):
-    self.layout.menu("TOPBAR_MT_SU_BLVL_import")
+    self.layout.menu(TOPBAR_MT_SU_BLVL_import.bl_idname)
 
 
 class TOPBAR_MT_SU_BLVL_export(bpy.types.Menu):
     '''The export submenu in the export menu'''
 
-    bl_label = "SU_Formats"
+    bl_label = "SU Formats"
+    bl_idname = "export_menu"
 
     def draw(self, context):
         layout = self.layout
@@ -46,11 +49,11 @@ class TOPBAR_MT_SU_BLVL_export(bpy.types.Menu):
         layout.separator()
         layout.operator("export_scene.navixml")
         # layout.operator("export_scene.navixmlbin")
-        layout.separator()
+        #layout.separator()
 
 
 def menu_func_exportsu(self, context):
-    self.layout.menu("TOPBAR_MT_SU_BLVL_export")
+    self.layout.menu(TOPBAR_MT_SU_BLVL_export.bl_idname)
 
 
 classes = [
@@ -68,15 +71,16 @@ def register():
     for cls in classes:
         bpy.utils.register_class(cls)
 
-    bpy.types.TOPBAR_MT_SU_BLVL_export.append(menu_func_exportsu)
-    bpy.types.TOPBAR_MT_SU_BLVL_import.append(menu_func_importsu)
+    
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_importsu)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func_exportsu)
 
 
 def unregister():
     """Remove addon."""
 
-    bpy.types.TOPBAR_MT_SU_BLVL_import.remove(menu_func_importsu)
-    bpy.types.TOPBAR_MT_SU_BLVL_export.remove(menu_func_exportsu)
+    bpy.types.TOPBAR_MT_file_import.remove(menu_func_importsu)
+    bpy.types.TOPBAR_MT_file_export.remove(menu_func_exportsu)
 
     for cls in classes:
         bpy.utils.unregister_class(cls)

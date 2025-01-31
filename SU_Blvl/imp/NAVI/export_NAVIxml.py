@@ -63,7 +63,24 @@ def write_some_data(context, filepath, use_some_setting):
                 return i
 
     for i in bm.faces:
-        for j in i.edges:
+        edge_list = list(i.edges)
+        edge_list.reverse()
+        edge1 = edge_list[0].calc_length()
+        edge2 = edge_list[1].calc_length()
+        edge3 = edge_list[2].calc_length()
+        temp_lis = [edge1, edge2, edge3]
+        for j in range(len(edge_list)):
+            face_list = [f.index for f in edge_list[j].link_faces]
+            if len(face_list) == 1:
+                edge_list[-1], edge_list[j], temp_lis[-1], temp_lis[j] = edge_list[j], edge_list[-1], temp_lis[j], temp_lis[-1]
+                break
+        for j in range(len(edge_list)-1):
+            for k in range(0, len(edge_list)-j-2):
+                if temp_lis[k] < temp_lis[k+1]:
+                    temp_lis[k], temp_lis[k+1], edge_list[k], edge_list[k+1] = temp_lis[k+1], temp_lis[k], edge_list[k+1], edge_list[k]
+
+        print(f'{edge_list[0].index} - {temp_lis[0]}; {edge_list[1].index} - {temp_lis[1]}; {edge_list[2].index} - {temp_lis[2]}')
+        for j in edge_list:
             face = ET.SubElement(tag_adjacent_face_index, "AdjFaceIndex")
             temp_lis = [f.index for f in j.link_faces]
             if len(temp_lis) == 1:
@@ -107,7 +124,7 @@ from bpy.types import Operator
 
 
 class ExportNAVI_XML(Operator, ExportHelper):
-    """This appears in the tooltip of the operator and in the generated docs"""
+    """Exports FIRST selected object (MESH) as a .NAVI.XML"""
     bl_idname = "export_scene.navixml"  # important since its how bpy.ops.import_test.some_data is constructed
     bl_label = "Export .NAVI.XML"
 

@@ -7,13 +7,26 @@ from xml.etree.ElementTree import tostring
 def write_some_data(context, filepath, use_some_setting):
     # bmesh initialization I suppose
     nobj = [obj for obj in bpy.context.selected_objects]
+
+    ob = nobj[0]
+
+    if ob.type != 'MESH':
+        raise TypeError("Active object is not a Mesh")
+
+    # Get editmode changes
+    ob.update_from_editmode()
+
+    me = ob.data
+
+    if len(me.polygons) < 1:
+        raise ValueError("Mesh has no faces")
     bm = bmesh.new()
     bm.from_mesh(nobj[0].data)
     bm.faces.ensure_lookup_table()
 
     filename = filepath
 
-    header = '<?xml version="1.0" encoding="utf-8" standalone="no" ?>'
+    #header = '<?xml version="1.0" encoding="utf-8" standalone="no" ?>'
 
     # Creating the XML
     root = ET.Element("Parent")
@@ -139,12 +152,14 @@ class ExportNAVI_XML(Operator, ExportHelper):
 
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
+    '''
     use_setting: BoolProperty(
         name="Use 0 instead of -1",
         description="Currently AdjFaceIndex -1 values don't work, so this check switches all of -1 to 0",
         default=False,
     )
-
+    '''
+    '''
     type: EnumProperty(
         name="Example Enum",
         description="Choose between two items",
@@ -154,6 +169,7 @@ class ExportNAVI_XML(Operator, ExportHelper):
         ),
         default='OPT_A',
     )
+    '''
 
     def execute(self, context):
         return write_some_data(context, self.filepath, self.use_setting)

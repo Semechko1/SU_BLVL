@@ -5,11 +5,12 @@ from .spawn_xmlbin import AddBox
 # ImportHelper is a helper class, defines filename and
 # invoke() function which calls the file selector.
 from bpy_extras.io_utils import ImportHelper
+from bpy_extras.object_utils import AddObjectHelper
 from bpy.props import StringProperty, BoolProperty, EnumProperty
 from bpy.types import Operator
 
 
-class ImportXMLBIN(Operator, ImportHelper):
+class ImportXMLBIN(Operator, ImportHelper, AddObjectHelper):
     """Imports .NAVI.xmlbin as a 3D object"""
     bl_idname = "import_scene.navixmlbin"  # important since its how bpy.ops.import_test.some_data is constructed
     bl_label = "Import xmlbin"

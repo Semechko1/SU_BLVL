@@ -3,6 +3,7 @@ import bpy
 from .imp.NAVI.import_xmlbin import ImportXMLBIN
 from .imp.NAVI.import_NAVIxml import ImportNAVI_XML
 from .imp.NAVI.export_NAVIxml import ExportNAVI_XML
+import sys
 
 bl_info = {
     'name': 'Blender Unleashed Lvl',
@@ -68,12 +69,19 @@ classes = [
 
 def register():
     """Add addon."""
-    for cls in classes:
-        bpy.utils.register_class(cls)
+    addons = bpy.context.preferences.addons.keys()
+    if 'bl_ext.sonic_io.hedgehog_engine_io_dev' in addons:
+        raise Exception("Disable [Hedgehog Engine I/O]\nSU_BLVL is NOT registered!")
+    elif 'bl_ext.sonic_io.hedgehog_engine_io' in addons:
+        raise Exception("Disable [Hedgehog Engine I/O]\nSU_BLVL is NOT registered!")
+    else:
+        for cls in classes:
+            bpy.utils.register_class(cls)
+        bpy.types.TOPBAR_MT_file_export.append(menu_func_exportsu)
+        bpy.types.TOPBAR_MT_file_import.append(menu_func_importsu)
 
-    
-    bpy.types.TOPBAR_MT_file_import.append(menu_func_importsu)
-    bpy.types.TOPBAR_MT_file_export.append(menu_func_exportsu)
+
+
 
 
 def unregister():

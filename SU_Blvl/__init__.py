@@ -8,7 +8,7 @@ import sys
 bl_info = {
     'name': 'Blender Unleashed Lvl',
     'author': 'Semka/Renas',
-    'version': (0, 1, 0),
+    'version': (0, 1, 1),
     'blender': (3, 6, 0),
     'location': 'File > Import ',
     'description': 'Import-Create-Export Sonic Unleashed stages!',
@@ -69,16 +69,17 @@ classes = [
 
 def register():
     """Add addon."""
+    '''
     addons = bpy.context.preferences.addons.keys()
     if 'bl_ext.sonic_io.hedgehog_engine_io_dev' in addons:
         raise Exception("Disable [Hedgehog Engine I/O]\nSU_BLVL is NOT registered!")
     elif 'bl_ext.sonic_io.hedgehog_engine_io' in addons:
         raise Exception("Disable [Hedgehog Engine I/O]\nSU_BLVL is NOT registered!")
-    else:
-        for cls in classes:
-            bpy.utils.register_class(cls)
-        bpy.types.TOPBAR_MT_file_export.append(menu_func_exportsu)
-        bpy.types.TOPBAR_MT_file_import.append(menu_func_importsu)
+    '''
+    for cls in classes:
+        bpy.utils.register_class(cls)
+    bpy.types.TOPBAR_MT_file_export.append(menu_func_exportsu)
+    bpy.types.TOPBAR_MT_file_import.append(menu_func_importsu)
 
 
 

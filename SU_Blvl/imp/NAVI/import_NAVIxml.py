@@ -14,6 +14,7 @@ class ImportNAVI_XML(Operator, ImportHelper, AddObjectHelper):
     """Import .NAVI.XML as a 3D object. Uses only Vertex Data and VertexIndex, other valiues aren't checked"""
     bl_idname = "import_scene.navixml"  # important since its how bpy.ops.import_test.some_data is constructed
     bl_label = "Import NAVI.XML"
+    bl_options = {'UNDO'}
 
     # ImportHelper mix-in class uses this.
     filename_ext = ".NAVI.XML"
@@ -32,18 +33,18 @@ class ImportNAVI_XML(Operator, ImportHelper, AddObjectHelper):
 #        default=True,
 #    )
 
-#    type: EnumProperty(
-#        name="Example Enum",
-#        description="Choose between two items",
-#        items=(
-#            ('OPT_A', "First Option", "Description one"),
-#            ('OPT_B', "Second Option", "Description two"),
-#        ),
-#        default='OPT_A',
-#    )
+    opt_cord: EnumProperty(
+        name="Import in XZ-Y",
+        description="Import xmlbin mesh with Blender's default orientation",
+        items=(
+            ('OPT_A', "No", "Import in original coordinates"),
+            ('OPT_B', "Yes", "Import in Blender's coordinates"),
+        ),
+        default='OPT_B',
+    )
 
     def execute(self, context):
-        return AddBox.my_func(self, context, self.filepath)
+        return AddBox.my_func(self, context, self.filepath, self.opt_cord)
 
 
 # Only needed if you want to add into a dynamic menu.

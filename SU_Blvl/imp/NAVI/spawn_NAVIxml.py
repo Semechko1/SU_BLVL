@@ -18,16 +18,21 @@ def calc_faces(array):
     return temp_arr
 
 
-def add_box(self, width, height, depth, path):
+def add_box(self, width, height, depth, path, setting):
     """
     This function takes inputs and returns vertex and face arrays.
     no actual mesh data creation is done here.
     """
 
     verts = read_NAVIxml.read_file(self, path)[3]
+    # print(setting)
+    # print(verts[0])
+    if setting == 'OPT_B':
+        for i in verts:
+            i[1], i[2] = i[2] * -1, i[1]
 
     faces = calc_faces(read_NAVIxml.read_file(self, path)[4])
-    print(faces)
+    #print(faces)
 
     # apply size
     for i, v in enumerate(verts):
@@ -61,12 +66,13 @@ class AddBox(bpy.types.Operator, AddObjectHelper):
         default=1.0,
     )
 
-    def my_func(self, context, file):
+    def my_func(self, context, file, setting):
 
         verts_loc, faces = add_box(
             self,
             1, 1, 1,
-            file
+            file,
+            setting
         )
 
         mesh = bpy.data.meshes.new(ntpath.basename(file))

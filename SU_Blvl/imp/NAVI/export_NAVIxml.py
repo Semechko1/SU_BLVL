@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 
 
-def write_some_data(context, filepath, use_some_setting):
+def write_some_data(context, filepath, setting):
     # bmesh initialization I suppose
     nobj = [obj for obj in bpy.context.selected_objects]
 
@@ -53,6 +53,13 @@ def write_some_data(context, filepath, use_some_setting):
         return str(nflt)
 
     n = 0
+    if setting == 'OPT_B':
+        for vertex in bm.verts:
+            (vertex.co.x,
+             vertex.co.y,
+             vertex.co.z) = (vertex.co.x,
+                             vertex.co.z,
+                             vertex.co.y*-1)
     for vertex in bm.verts:
         vert = ET.SubElement(tag_vertex, "Vertex")
         ET.SubElement(vert, "x").text = str(locat(vertex.co.x))
@@ -97,10 +104,7 @@ def write_some_data(context, filepath, use_some_setting):
             face = ET.SubElement(tag_adjacent_face_index, "AdjFaceIndex")
             temp_lis = [f.index for f in j.link_faces]
             if len(temp_lis) == 1:
-                if use_some_setting == True:
-                    face.text = "0"
-                if use_some_setting == False:
-                    face.text = "-1"
+                face.text = "-1"
             elif len(temp_lis) > 1:
                 face.text = str(find_correct_index(i.index, temp_lis))
 
@@ -159,20 +163,18 @@ class ExportNAVI_XML(Operator, ExportHelper):
         default=False,
     )
     '''
-    '''
-    type: EnumProperty(
-        name="Example Enum",
-        description="Choose between two items",
+    opt_cord: EnumProperty(
+        name="Correct orientation",
+        description="Choose 'Yes' if you were importing in the Blender's orientation",
         items=(
-            ('OPT_A', "First Option", "Description one"),
-            ('OPT_B', "Second Option", "Description two"),
+            ('OPT_A', "No", "Do not re-orient model's data on export"),
+            ('OPT_B', "Yes", "Re-orient export"),
         ),
-        default='OPT_A',
+        default='OPT_B',
     )
-    '''
 
     def execute(self, context):
-        return write_some_data(context, self.filepath, False)
+        return write_some_data(context, self.filepath, self.opt_cord)
 
 
 # Only needed if you want to add into a dynamic menu

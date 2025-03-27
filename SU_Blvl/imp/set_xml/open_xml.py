@@ -1,15 +1,54 @@
+import math
+
 import bpy
+import mathutils
 import xml.etree.ElementTree as ET
-from .do_data_creation import do_dat_creat as ddc
 
 
 
 
-def read_some_data(context, filepath, use_some_setting):
+def read_some_data(context, filepath, setting):
     tree = ET.parse(filepath)
     root = tree.getroot()
-    print(tree)
-    ddc.rs()
+    print(root.tag)
+    print(len(root))
+    print()
+    for i in range(len(root)):
+        for j in range(len(root[i])):
+            # print(root[i][j].tag)
+            if root[i][j].tag == "Position":
+                if setting == "OPT_B":
+                    xp, yp, zp = (float(root[i][j][1].text),
+                                  float(root[i][j][3].text)*-1,
+                                  float(root[i][j][2].text))
+                else:
+                    xp, yp, zp = (float(root[i][j][1].text),
+                                  float(root[i][j][2].text),
+                                  float(root[i][j][3].text))
+                break
+            else:
+                xp, yp, zp = 0, 0, 0
+        for j in range(len(root[i])):
+            if root[i][j].tag == "Rotation":
+                wr, xr, yr, zr = (float(root[i][j][0].text), float(root[i][j][1].text),
+                                  float(root[i][j][2].text), float(root[i][j][3].text))
+                break
+            else:
+                wr, xr, yr, zr = 1, 0, 0, 0
+
+        #Euler = mathutils.Quaternion((xr,yr,zr,wr)).to_euler('XYZ')
+        #Euler.rotate(temp_Euler)
+        bpy.ops.mesh.primitive_monkey_add(location=(xp,yp,zp))
+        the_mesh = bpy.context.object
+        the_mesh.rotation_mode = 'QUATERNION'
+        if setting == "OPT_B":
+            the_mesh.rotation_quaternion = mathutils.Quaternion(
+                mathutils.Quaternion((wr, xr, yr, zr)) @
+                mathutils.Quaternion((1 / math.sqrt(2), 1 / math.sqrt(2), 0, 0)))
+        else:
+            the_mesh.rotation_quaternion = mathutils.Quaternion((wr, xr, yr, zr))
+        the_mesh.name = root[i].tag
+
 
     return {'FINISHED'}
 
@@ -22,9 +61,10 @@ from bpy.types import Operator
 
 
 class ImportSetXml(Operator, ImportHelper):
-    """This appears in the tooltip of the operator and in the generated docs"""
-    bl_idname = "import_test.some_data"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import Set of objects from SU stage"
+    """Import Set of objects from SU stage"""
+    bl_idname = "import_scene.setxml"  # important since its how bpy.ops.import_test.some_data is constructed
+    bl_label = "Import .set.xml"
+    bl_options = {'UNDO'}
 
     # ImportHelper mix-in class uses this.
     filename_ext = ".xml"
@@ -37,24 +77,24 @@ class ImportSetXml(Operator, ImportHelper):
 
     # List of operator properties, the attributes will be assigned
     # to the class instance from the operator settings before calling.
-    use_setting: BoolProperty(
-        name="Example Boolean",
-        description="Example Tooltip",
-        default=True,
-    )
+#    use_setting: BoolProperty(
+#        name="Example Boolean",
+#        description="Example Tooltip",
+#        default=True,
+#    )
 
-    type: EnumProperty(
-        name="Example Enum",
-        description="Choose between two items",
+    opt_cord: EnumProperty(
+        name="Import in XZ-Y",
+        description="Import set of objects with Blender's default orientation",
         items=(
-            ('OPT_A', "First Option", "Description one"),
-            ('OPT_B', "Second Option", "Description two"),
+            ('OPT_A', "No", "Import in original coordinates"),
+            ('OPT_B', "Yes", "Import in Blender's coordinates"),
         ),
-        default='OPT_A',
+        default='OPT_B',
     )
 
     def execute(self, context):
-        return read_some_data(context, self.filepath, self.use_setting)
+        return read_some_data(context, self.filepath, self.opt_cord)
 
 
 # Only needed if you want to add into a dynamic menu.

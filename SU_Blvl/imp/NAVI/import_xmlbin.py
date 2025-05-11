@@ -13,7 +13,7 @@ from bpy.types import Operator
 class ImportXMLBIN(Operator, ImportHelper, AddObjectHelper):
     """Imports .NAVI.xmlbin as a 3D object"""
     bl_idname = "import_scene.navixmlbin"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import xmlbin"
+    bl_label = "Import .NAVI.xmlbin"
     bl_options = {'UNDO'}
 
     # ImportHelper mix-in class uses this.

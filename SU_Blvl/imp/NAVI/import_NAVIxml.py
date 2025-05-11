@@ -13,7 +13,7 @@ from bpy.types import Operator
 class ImportNAVI_XML(Operator, ImportHelper, AddObjectHelper):
     """Import .NAVI.XML as a 3D object. Uses only Vertex Data and VertexIndex, other valiues aren't checked"""
     bl_idname = "import_scene.navixml"  # important since its how bpy.ops.import_test.some_data is constructed
-    bl_label = "Import NAVI.XML"
+    bl_label = "Import .NAVI.XML"
     bl_options = {'UNDO'}
 
     # ImportHelper mix-in class uses this.

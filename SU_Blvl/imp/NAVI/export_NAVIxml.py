@@ -84,6 +84,8 @@ def write_some_data(context, filepath, setting):
 
     for i in bm.faces:
         edge_list = list(i.edges)
+        if len(edge_list)>3:
+            raise Exception("Please...\n\nTRIANGULATE YOUR MESH")
         edge_list.reverse()
         edge1 = edge_list[0].calc_length()
         edge2 = edge_list[1].calc_length()

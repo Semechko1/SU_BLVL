@@ -33,11 +33,13 @@ for i in range(len(obj_list)):
     for j in range(len(obj_list[i][1])):
         temp_name = ""
         for k in obj_list[i][1][j][0]:
-            if (k != "-") and (k != "."):
+            if (k != "-") and (k != ".") and (k != "_"):
                 temp_name=temp_name+k
             if k == "-":
-                temp_name=temp_name+"_"
+                temp_name=temp_name+""
             if k == ".":
+                temp_name=temp_name+""
+            if k == "_":
                 temp_name=temp_name+""
         obj_list[i][1][j][0]=temp_name
 for i in obj_list:

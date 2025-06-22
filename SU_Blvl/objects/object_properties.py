@@ -1,9 +1,134 @@
 import bpy
+import xml.etree.ElementTree as ET
+import os
 
 class MyObjectPG(bpy.types.PropertyGroup):
     col: bpy.props.PointerProperty(type=bpy.types.Collection)
 
 class obj_properties():
+    def register():
+        obj_list=[]
+        num=0
+        db_directory = os.path.join(os.path.dirname(__file__), 'SU/')
+        # print(os.path.abspath(db_directory), db_directory, os.path.realpath(__file__))
+        # print(os.path.join(os.path.dirname(__file__), "SU/"))
+        # print()
+        for path, folders, files in os.walk(db_directory):
+            for file in range(len(files)):
+                tree = ET.parse(os.path.join(path, files[file]))
+                # print(path, files[file])
+                root = tree.getroot()
+                for i in range(len(root)):
+                    obj_list.append([])
+                    obj_list[num].append(root[i].tag)
+                    obj_list[num].append([])
+                    obj_list[num][1].append(root[i].attrib)
+                    obj_list[num][1].append(os.path.join(path, files[file]))
+                    num += 1
+        for i in range(len(obj_list)):
+            temp_name = ""
+            original_name = ""
+            for j in obj_list[i][0]:
+                if j == "-":
+                    temp_name = temp_name + ""
+                if j == ".":
+                    # print(j, obj_list[i][0])
+                    temp_name = temp_name + ""
+                if j == "_":
+                    temp_name = temp_name + ""
+                if j != "-" and j != "_" and j != ".":
+                    temp_name = temp_name + j
+                original_name = original_name + j
+            obj_list[i][0] = temp_name
+            obj_list[i][1].append(original_name)
+            # print(obj_list[i][0], obj_list[i][1])
+        for i in obj_list:
+            i[0] = f'{i[1][0].get("type")}_{i[0]}'
+        f_obj_list = dict(obj_list)
+        # print(f_obj_list)
+        obj_list = []
+        i = 0
+        for key, value in f_obj_list.items():
+            obj_list.append([])
+            obj_list[i].append(key)
+            obj_list[i].append(value)
+            i += 1
+        i = 0
+        #print(obj_list)
+        for i in obj_list:
+            if i[1][0].get('type') == "float":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.FloatProperty(name="{i[1][2]}", default={float(i[1][0].get("default"))}, description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == "integer":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.IntProperty(name="{i[1][2]}", default={int(i[1][0].get("default"))}, description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == "uint16":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.IntProperty(name="{i[1][2]}", default={int(i[1][0].get("default"))}, description="{i[1][0].get("description")}", min=0, max=65535) # {i[1][1]}\n')
+            if i[1][0].get('type') == "uint32":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.IntProperty(name="{i[1][2]}", default={int(i[1][0].get("default"))}, description="{i[1][0].get("description")}", min=0) # {i[1][1]}\n')
+            if i[1][0].get('type') == "bool":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.BoolProperty(name="{i[1][2]}", default={str.capitalize(i[1][0].get("default"))}, description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == "vector":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.FloatVectorProperty(name="{i[1][2]}", default=(0.0, 0.0, 0.0), description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == 'string':
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.StringProperty(name="{i[1][2]}", default="{i[1][0].get("default")}", description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == 'id_list':
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.PointerProperty(type=bpy.types.Collection, name="{i[1][2]}", description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == "id":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.PointerProperty(type=bpy.types.Object, name="{i[1][2]}", description="{i[1][0].get("description")}") # {i[1][1]}\n')
+            if i[1][0].get('type') == "target":
+                exec(f'bpy.types.Object.{i[0]} = bpy.props.PointerProperty(type=bpy.types.Object, name="{i[1][2]}", description="{i[1][0].get("description")}") # {i[1][1]}\n')
+    def unregister():
+        obj_list=[]
+        num=0
+        db_directory = os.path.join(os.path.dirname(__file__), 'SU/')
+        # print(os.path.abspath(db_directory), db_directory, os.path.realpath(__file__))
+        # print(os.path.join(os.path.dirname(__file__), "SU/"))
+        # print()
+        for path, folders, files in os.walk(db_directory):
+            for file in range(len(files)):
+                tree = ET.parse(os.path.join(path, files[file]))
+                # print(path, files[file])
+                root = tree.getroot()
+                for i in range(len(root)):
+                    obj_list.append([])
+                    obj_list[num].append(root[i].tag)
+                    obj_list[num].append([])
+                    obj_list[num][1].append(root[i].attrib)
+                    obj_list[num][1].append(os.path.join(path, files[file]))
+                    num += 1
+        for i in range(len(obj_list)):
+            temp_name = ""
+            original_name = ""
+            for j in obj_list[i][0]:
+                if j == "-":
+                    temp_name = temp_name + ""
+                if j == ".":
+                    # print(j, obj_list[i][0])
+                    temp_name = temp_name + ""
+                if j == "_":
+                    temp_name = temp_name + ""
+                if j != "-" and j != "_" and j != ".":
+                    temp_name = temp_name + j
+                original_name = original_name + j
+            obj_list[i][0] = temp_name
+            obj_list[i][1].append(original_name)
+        for i in obj_list:
+            i[0] = f'{i[1][0].get("type")}_{i[0]}'
+        f_obj_list = dict(obj_list)
+        # print(f_obj_list)
+
+        obj_list = []
+        i = 0
+        for key, value in f_obj_list.items():
+            obj_list.append([])
+            obj_list[i].append(key)
+            obj_list[i].append(value)
+            i += 1
+        i = 0
+        for i in obj_list:
+            exec(f'del bpy.types.Object.{i[0]}')
+    register()
+
+class old_obj_properties():
     bpy.types.Object.float_Amplitude = bpy.props.FloatProperty(name="Amplitude", default=1.0,
                                                                description="How far the platform moves")  # SU/objects/africa_day/AfricaFloorC.xml
     bpy.types.Object.float_Cycle = bpy.props.FloatProperty(name="Cycle", default=1.0,

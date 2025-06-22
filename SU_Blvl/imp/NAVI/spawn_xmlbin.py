@@ -83,7 +83,10 @@ class AddBox(bpy.types.Operator, AddObjectHelper):
 
         bm.verts.ensure_lookup_table()
         for f_idx in faces:
-            bm.faces.new([bm.verts[i] for i in f_idx])
+            try:
+                bm.faces.new([bm.verts[i] for i in f_idx])
+            except ValueError:
+                continue
 
         bm.to_mesh(mesh)
         mesh.update()

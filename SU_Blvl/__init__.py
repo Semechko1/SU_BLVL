@@ -1,18 +1,20 @@
 import bpy
-from .imp.set_xml.open_xml import ImportSetXml
+from .imp.set_xml.Import_stg_set import ImportSetXml
 from .imp.NAVI.import_xmlbin import ImportXMLBIN
 from .imp.NAVI.import_NAVIxml import ImportNAVI_XML
 from .imp.NAVI.export_NAVIxml import ExportNAVI_XML
-from .objects.set_params import VIEW3D_PT_BLVL_NAVI, VIEW3D_PT_BLVL_objprop
-from .objects.SU_object_properties import MyObjectPG, obj_properties
+from .imp.set_xml.Export_stg_set import ExportStgSet
+from .objects.side_panel import VIEW3D_PT_BLVL_IE, VIEW3D_PT_BLVL_TOOLS, VIEW3D_PT_BLVL_objprop, VIEW3D_PT_BLVL_objidlistprop
+from .objects.object_properties import MyObjectPG, obj_properties
+from .small_scripts import UpdateObjectModifiers, AssignObj2Stage
 
 bl_info = {
-    'name': 'Blender Unleashed Lvl',
+    'name': 'BLVL',
     'author': 'Semka/Renas',
     'version': (0, 2, 0),
     'blender': (3, 6, 0),
     'location': 'File > Import ',
-    'description': 'Import-Create-Export Sonic Unleashed stages!',
+    'description': 'Import-Create-Export Hedgehog Engine 1 stages!',
     "wiki_url": "https://github.com/Semechko1/SU_BLVL",
     'support': 'COMMUNITY',
     'category': 'Import-Export',
@@ -28,7 +30,7 @@ class TOPBAR_MT_SU_BLVL_import(bpy.types.Menu):
     def draw(self, context):
         layout = self.layout
         layout.label(text="Set XML imports...")
-        layout.operator("import_scene.setxml")
+        layout.operator("import_scene.stg")
         layout.separator()
         layout.label(text="NAVI imports...")
         # layout.separator()
@@ -48,12 +50,14 @@ class TOPBAR_MT_SU_BLVL_export(bpy.types.Menu):
     bl_idname = "export_menu"
 
     def draw(self, context):
-        layout = self.layout
-        layout.label(text="NAVI exports...")
+        layout = self.layo
+        layout.label(text="Stage Exports")
+        layout.separator()
+        layout.operator("export_scene.stg")
+        layout.label(text="NAVI exports")
         layout.separator()
         layout.operator("export_scene.navixml")
         # layout.operator("export_scene.navixmlbin")
-        # layout.separator()
 
 
 def menu_func_exportsu(self, context):
@@ -63,16 +67,21 @@ def menu_func_exportsu(self, context):
 classes = [
     TOPBAR_MT_SU_BLVL_export,
     ExportNAVI_XML,
+    ExportStgSet,
 
     TOPBAR_MT_SU_BLVL_import,
     ImportXMLBIN,
     ImportNAVI_XML,
     ImportSetXml,
 
-    VIEW3D_PT_BLVL_NAVI,
+    VIEW3D_PT_BLVL_IE,
+
+    VIEW3D_PT_BLVL_TOOLS,
     VIEW3D_PT_BLVL_objprop,
-    MyObjectPG
-    #obj_properties
+    VIEW3D_PT_BLVL_objidlistprop,
+    MyObjectPG,
+    UpdateObjectModifiers,
+    AssignObj2Stage
 ]
 
 

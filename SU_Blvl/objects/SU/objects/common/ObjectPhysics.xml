@@ -6,6 +6,13 @@
   <IsDynamic type="bool" default="false" description="" />
   <IsReset type="bool" default="false" description="" />
   <Type type="string" default="IronBox2" description="" />
-  <ItemNum type="float" default="0" description="" />
-  <ItemType type="float" default="0" description="" />
+  <ItemNum type="float" default="0" description="amount of Dark Gaia Force Small spheres that will emerge" />
+  <ItemType type="float" default="0" description="0 - Dark Gaia Force Small
+1 - Nothing
+2 - Dark Gaia Force Big
+3 - Health Ring Full
+4 - Super Claw
+5 - Power Shield
+6 - Shield Pickup
+7 - Chaos Sphere (XP)" />
 </Template>

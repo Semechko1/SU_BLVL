@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import tostring
 
 
-def write_some_data(context, filepath, setting):
+def write_some_data(context, filepath, setting, sef):
     # bmesh initialization I suppose
     nobj = [obj for obj in bpy.context.selected_objects]
 
@@ -85,7 +85,10 @@ def write_some_data(context, filepath, setting):
     for i in bm.faces:
         edge_list = list(i.edges)
         if len(edge_list)>3:
-            raise Exception("Please...\n\nTRIANGULATE YOUR MESH")
+            sef.report({"ERROR"}, "Triangulate your mesh before exporting!")
+            return {'CANCELLED'}
+            #others can be {"INFO"} and {"WARNING"}
+            #raise Exception("Please...\n\nTRIANGULATE YOUR MESH")
         edge_list.reverse()
         edge1 = edge_list[0].calc_length()
         edge2 = edge_list[1].calc_length()
@@ -176,7 +179,7 @@ class ExportNAVI_XML(Operator, ExportHelper):
     )
 
     def execute(self, context):
-        return write_some_data(context, self.filepath, self.opt_cord)
+        return write_some_data(context, self.filepath, self.opt_cord, self)
 
 
 # Only needed if you want to add into a dynamic menu

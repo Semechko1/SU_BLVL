@@ -1,5 +1,5 @@
 import math
-
+#python script which converts IEE754 / iee754 hex data into a float
 
 def ieee754_to_float(my_hexdata):
     bytes_sep = []

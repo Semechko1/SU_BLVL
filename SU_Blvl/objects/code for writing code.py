@@ -8,6 +8,7 @@ num=int(0)
 for path, folders, files in os.walk(directory):
     for SUobject in range(len(files)):
         #print(os.path.join(path, files[object]))
+        #print(files[SUobject])
         temp_file = open(os.path.join(path, files[SUobject]))
         tree = ET.parse(temp_file)
         root = tree.getroot()
@@ -27,7 +28,7 @@ for path, folders, files in os.walk(directory):
         #print(list[0][1].get("type"))
         temp_file.close()
 
-print(obj_list[0])
+#print(obj_list[0])
 for i in range(len(obj_list)):
     temp_name = ""
     original_name = ""
